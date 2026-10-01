@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jago Jualan - Game Salesmanship SDK</title>
+<style>
+:root{--bg:#fff7f5;--card:#fff;--tx:#222;--mu:#666;--rd:#d62828;--gr:#2e9e3e;--bd:#f0d4cf;--ok:#d9f5de;--no:#fde0e0;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#1a1414;--card:#262020;--tx:#f3eeee;--mu:#b5aaaa;--bd:#443838;--ok:#1d4a27;--no:#561f1f}}
+:root[data-theme="dark"]{--bg:#1a1414;--card:#262020;--tx:#f3eeee;--mu:#b5aaaa;--bd:#443838;--ok:#1d4a27;--no:#561f1f}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;line-height:1.5}
+.w{max-width:640px;margin:0 auto;padding:16px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:16px;padding:20px;margin-top:12px}
+h1{font-size:28px;margin:0 0 4px;color:var(--rd)}h2{margin:0 0 8px;font-size:19px}
+.mu{color:var(--mu);font-size:14px}
+input,select{width:100%;padding:10px;border-radius:10px;border:2px solid var(--bd);font-size:16px;background:var(--bg);color:var(--tx);margin:6px 0}
+input{padding:12px;margin:12px 0}
+button{font:inherit;cursor:pointer}
+.btn{background:var(--rd);color:#fff;border:0;padding:12px 22px;border-radius:10px;font-weight:700;font-size:16px;margin-top:8px}
+.btn:disabled{opacity:.4}
+.opt{display:block;width:100%;text-align:left;background:var(--bg);color:var(--tx);border:2px solid var(--bd);border-radius:10px;padding:12px;margin:6px 0}
+.opt:hover:not(:disabled){border-color:var(--rd)}
+.opt.ok{background:var(--ok);border-color:var(--gr)}.opt.no{background:var(--no);border-color:var(--rd)}.opt.sel{border-color:var(--rd);border-style:dashed}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bar{height:8px;background:var(--bd);border-radius:8px;overflow:hidden}.bar i{display:block;height:100%;background:var(--gr);transition:width .3s}
+.top{display:flex;justify-content:space-between;font-size:14px;margin-bottom:6px;gap:8px;flex-wrap:wrap}
+.exp{margin-top:10px;padding:10px;border-radius:10px;background:var(--bg);font-size:14px}
+.big{font-size:56px;font-weight:800;color:var(--rd);text-align:center;margin:0}
+.row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--bd);gap:8px}
+.c{text-align:center}
+.bub{background:var(--bg);border-left:5px solid var(--rd);border-radius:10px;padding:12px;margin:8px 0;font-style:italic}
+.pos{display:flex;gap:8px;align-items:center}.pos b{min-width:24px}
+</style></head><body><div class="w" id="app"></div>
+<script>
+var S=[
+{k:"tf",t:"Benar atau Salah?",d:"Tentukan pernyataan berikut Benar atau Salah.",i:"⚖️",q:[
+["Jam terbang yang panjang adalah kunci utama kompetensi seorang salesman.",0,"Kunci kompetensi adalah ASK: Attitude, Skill & Knowledge."],
+["Menurut survei AC Nielsen (FMCG), 60% outlet membeli karena salesmannya.",1,"Perusahaan 20%, produk 20%, salesman 60%."],
+["Keputusan membeli lebih banyak dipengaruhi emosi daripada rasional.",1,"Karena itu hubungan dan komunikasi interpersonal sangat penting."],
+["Penjual sukses tetap mengerjakan hal yang seharusnya, walau kadang tidak menyukainya.",1,"Itulah makna 'Selling is all about discipline'."],
+["Customer yang puas bercerita ke 8–10 orang.",0,"Yang puas bercerita ke 4–5 orang; yang kecewa ke 8–10 orang."]]},
+{k:"ord",t:"Susun Urutan P8P",d:"Ketuk langkah satu per satu sesuai urutan yang benar dalam P8P (Pelaksanaan 8 langkah dalam Peningkatan Penjualan).",i:"🧩",q:["Persiapan","Pendekatan","Pemeriksaan Stok","Presentasi","Penutupan","Pemajangan / Merchandising","Pengadministrasian","Pengevaluasian"]},
+{k:"fill",t:"Isi yang Hilang",d:"Lengkapi kalimat dengan memilih kata yang tepat dari daftar.",i:"✍️",bank:["Call / Route","08.15","Kartu Langganan","nama","16.30","Promosi"],q:[
+["Tiga disiplin (3D): Disiplin ___, Disiplin Merchandising, dan Disiplin KL/SFA.",0],
+["Salesman berangkat maksimum jam ___ dan selesai kunjungan minimal jam 16.30 di toko.",1],
+["___ dipakai sebagai alat negosiasi untuk memberi usulan kepada toko, bukan untuk minta pesanan.",2],
+["Ukuran sukses standar kualitas: toko harus mengetahui ___ salesman.",3]]},
+{k:"mat",t:"Pasangkan Tipe Customer",d:"Ketuk tipe customer di kiri, lalu ketuk karakteristik yang cocok di kanan.",i:"🔗",q:[
+["Camper","Takut ambil risiko, pesimis, ingin rasa aman"],
+["Cash Registered","Berorientasi untung rugi, penuh perhitungan"],
+["Critiques","Berani, arogan, suka pujian & pengakuan"],
+["Climber","Mudah didekati, akrab & cenderung friendly"]]},
+{k:"sim",t:"Simulasi Handling Objection",d:"Anda sedang di toko Koh Ahong. Pilih respons terbaik di setiap giliran (rumus L-R-I-A).",i:"🎭",q:[
+["Koh Ahong: \"Aduh, harganya mahal, barang yang lama saja masih numpuk di gudang.\"",[["Langsung bantah: \"Harga kami sudah paling murah, Koh!\"",0,"Membantah memancing debat. Simak dulu."],["Simak sampai selesai sambil mengangguk (Noding Technique).",5,"Tepat! Listen: simak dan jangan dulu dijawab."],["Alihkan ke promo baru.",2,"Keberatannya belum didengar tuntas."]]],
+["Koh Ahong selesai bicara dan menatap Anda.",[["\"Jadi Koh khawatir stok menumpuk karena harga, begitu ya?\"",5,"Tepat! Repeat: ulangi keberatan agar jelas."],["Langsung beri diskon.",2,"Terlalu cepat, belum tahu masalah sebenarnya."],["\"Ah, itu cuma alasan Koh saja.\"",0,"Menyinggung dan beradu argumentasi."]]],
+["Koh Ahong: \"Iya, itu masalah saya.\"",[["\"Selain harga dan stok, adakah hal lain yang membuat Koh ragu?\"",5,"Tepat! Isolate: pastikan itu satu-satunya keberatan."],["\"Pasti beli kan, Koh?\"",2,"Menekan tanpa memastikan keberatan."],["\"Ya sudah, saya pergi dulu.\"",0,"Menyerah, peluang closing hilang."]]],
+["Koh Ahong: \"Tidak ada lagi, cuma itu.\"",[["\"Di SFA, 15 karton biasa habis. Koh ambil 20 atau 22 karton?\"",5,"Tepat! Answer dengan data SFA + closing positive 2 pilihan."],["\"Ya sudah, terserah Koh mau ambil berapa.\"",2,"Penentu jumlah order harus kita."],["\"Pokoknya ambil 100 karton!\"",0,"Tidak berdasar data dan memaksa."]]]]}
+];
+var A=document.getElementById("app"),name="",si=0,sc=[0,0,0,0,0];
+function sh(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function esc(s){var d=document.createElement("div");d.textContent=s;return d.innerHTML}
+function tot(){return sc.reduce(function(a,b){return a+b},0)}
+function $(i){return document.getElementById(i)}
+function hd(){return `<div class="top"><b>${esc(name)}</b><span>Tahap ${si+1}/5: ${S[si].t}</span><span>Poin: ${tot()}</span></div><div class="bar"><i style="width:${si*20}%"></i></div>`}
+function start(){A.innerHTML=`<div class="card c"><div style="font-size:48px">🐰</div><h1>Mau JAGO Jualan?</h1><p class="mu">Game bertahap Salesmanship &amp; Handling Objection<br>SDK – Sekolah Dua Kelinci</p><input id="nm" maxlength="30" placeholder="Masukkan nama Anda" autocomplete="off"><button class="btn" id="go" disabled>Mulai Game</button><p class="mu">5 tahap dengan 5 jenis permainan berbeda • skor akhir 0–100</p></div>`;
+var n=$("nm"),g=$("go");n.oninput=function(){g.disabled=!n.value.trim()};
+n.onkeydown=function(e){if(e.key==="Enter"&&n.value.trim())g.click()};
+g.onclick=function(){name=n.value.trim();si=0;sc=[0,0,0,0,0];intro()}}
+function intro(){var s=S[si];A.innerHTML=`<div class="card c"><div style="font-size:52px">${s.i}</div><p class="mu">Tahap ${si+1} dari 5 • maksimal 20 poin</p><h2>${s.t}</h2><p class="mu">${s.d}</p><button class="btn" id="nx">Mulai Tahap</button></div>`;
+$("nx").onclick=function(){({tf:gTF,ord:gOrd,fill:gFill,mat:gMat,sim:gSim})[s.k]()}}
+function done(p){sc[si]=p;var last=si===4;
+A.innerHTML=`<div class="card c"><div style="font-size:52px">${p>=18?"🏆":p>=12?"👍":"💪"}</div><h2>Tahap ${si+1} selesai!</h2><p class="mu">${S[si].t}</p><p class="big">${p}/20</p><p class="mu">${p>=18?"Luar biasa!":p>=12?"Bagus, terus tingkatkan.":"Pelajari lagi materinya ya."}</p><button class="btn" id="nx">${last?"Lihat Skor Akhir":"Lanjut ke Tahap "+(si+2)}</button></div>`;
+$("nx").onclick=function(){if(last)fin();else{si++;intro()}}}
+function fb(ok,txt,lab,fn){$("fb").innerHTML=`<div class="exp"><b>${ok?"✅ Benar!":"❌ Belum tepat."}</b> ${txt}</div><button class="btn" id="nx">${lab}</button>`;$("nx").onclick=fn}
+/* Tahap 1: Benar/Salah */
+function gTF(){var q=S[si].q,i=0,p=0;
+function r(){if(i>=q.length)return done(p*4);
+A.innerHTML=hd()+`<div class="card"><p class="mu">Pernyataan ${i+1} dari ${q.length}</p><h2>${q[i][0]}</h2><div class="two"><button class="opt c" data-v="1">✅ Benar</button><button class="opt c" data-v="0">❌ Salah</button></div><div id="fb"></div></div>`;
+A.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){var ok=+b.dataset.v===q[i][1];if(ok)p++;
+A.querySelectorAll(".opt").forEach(function(x){x.disabled=true;if(+x.dataset.v===q[i][1])x.classList.add("ok");else if(x===b)x.classList.add("no")});
+fb(ok,q[i][2],i<q.length-1?"Berikutnya":"Selesai",function(){i++;r()})}})}
+r()}
+/* Tahap 2: Urutan */
+function gOrd(){var c=S[si].q,pool=sh(c.map(function(_,i){return i})),pick=[],chk=false;
+function r(){var h=hd()+`<div class="card"><h2>Urutan Anda</h2>`;
+if(!pick.length)h+=`<p class="mu">Belum ada. Ketuk langkah di bawah.</p>`;
+pick.forEach(function(v,k){var cl=chk?(v===k?"ok":"no"):"";h+=`<div class="opt ${cl} pos"><b>${k+1}.</b> ${c[v]}${chk&&v!==k?` <span class="mu">→ seharusnya: ${c[k]}</span>`:""}</div>`});
+h+=`</div>`;
+if(!chk){h+=`<div class="card"><h2>Pilih langkah berikutnya</h2>`;pool.forEach(function(v){if(pick.indexOf(v)<0)h+=`<button class="opt" data-v="${v}">${c[v]}</button>`});
+h+=`<button class="btn" id="rs" style="background:var(--mu)">Ulangi</button> <button class="btn" id="ck" ${pick.length<8?"disabled":""}>Periksa Urutan</button></div>`}
+else{var n=pick.filter(function(v,k){return v===k}).length;h+=`<div class="card c"><p>${n} dari 8 posisi tepat</p><button class="btn" id="nx">Lanjut</button></div>`}
+A.innerHTML=h;
+A.querySelectorAll("[data-v]").forEach(function(b){b.onclick=function(){pick.push(+b.dataset.v);r()}});
+if($("rs"))$("rs").onclick=function(){pick=[];r()};
+if($("ck"))$("ck").onclick=function(){chk=true;r()};
+if($("nx"))$("nx").onclick=function(){done(Math.round(pick.filter(function(v,k){return v===k}).length/8*20))}}
+r()}
+/* Tahap 3: Isi titik-titik */
+function gFill(){var s=S[si],h=hd()+`<div class="card"><p class="mu">Pilihan kata: ${s.bank.join(" • ")}</p>`;
+s.q.forEach(function(q,i){var p=q[0].split("___");h+=`<p>${i+1}. ${p[0]}<select id="s${i}"><option value="">-- pilih --</option>${s.bank.map(function(b,k){return `<option value="${k}">${b}</option>`}).join("")}</select>${p[1]||""}</p><div id="r${i}"></div>`});
+h+=`<button class="btn" id="ck">Periksa Jawaban</button></div>`;A.innerHTML=h;
+$("ck").onclick=function(){var p=0;s.q.forEach(function(q,i){var el=$("s"+i),ok=el.value!==""&&+el.value===q[1];if(ok)p+=5;el.disabled=true;
+$("r"+i).innerHTML=ok?`<span class="mu">✅ Tepat</span>`:`<span class="mu">❌ Jawaban: ${s.bank[q[1]]}</span>`});
+$("ck").outerHTML=`<p class="c"><b>${p}/20 poin</b></p><button class="btn" id="nx">Lanjut</button>`;$("nx").onclick=function(){done(p)}}}
+/* Tahap 4: Mencocokkan */
+function gMat(){var q=S[si].q,R=sh(q.map(function(_,i){return i})),sel=null,mt={},wr={},p=0,flash=-1;
+function r(){var n=Object.keys(mt).length,h=hd()+`<div class="card"><p class="mu">Ketuk tipe di kiri, lalu pasangannya di kanan. Pasangan benar di percobaan pertama = 5 poin.</p><div class="two"><div>`;
+q.forEach(function(x,i){h+=`<button class="opt ${mt[i]?"ok":sel===i?"sel":""}" data-l="${i}" ${mt[i]?"disabled":""}><b>${x[0]}</b></button>`});
+h+=`</div><div>`;R.forEach(function(i){h+=`<button class="opt ${mt[i]?"ok":flash===i?"no":""}" data-r="${i}" ${mt[i]?"disabled":""}>${q[i][1]}</button>`});
+h+=`</div></div>${n===q.length?`<p class="c"><b>${p}/20 poin</b></p><button class="btn" id="nx">Lanjut</button>`:""}</div>`;A.innerHTML=h;flash=-1;
+A.querySelectorAll("[data-l]").forEach(function(b){b.onclick=function(){sel=+b.dataset.l;r()}});
+A.querySelectorAll("[data-r]").forEach(function(b){b.onclick=function(){if(sel===null)return;var v=+b.dataset.r;
+if(v===sel){mt[v]=1;if(!wr[v])p+=5;sel=null}else{wr[sel]=1;flash=v}r()}});
+if($("nx"))$("nx").onclick=function(){done(p)}}
+r()}
+/* Tahap 5: Simulasi */
+function gSim(){var q=S[si].q,i=0,p=0;
+function r(){if(i>=q.length)return done(p);
+A.innerHTML=hd()+`<div class="card"><p class="mu">Giliran ${i+1} dari ${q.length}</p><div class="bub">${q[i][0]}</div><p><b>Respons Anda:</b></p>${q[i][1].map(function(o,k){return `<button class="opt" data-k="${k}">${o[0]}</button>`}).join("")}<div id="fb"></div></div>`;
+A.querySelectorAll(".opt").forEach(function(b){b.onclick=function(){var o=q[i][1][+b.dataset.k];p+=o[1];
+A.querySelectorAll(".opt").forEach(function(x){x.disabled=true;var v=q[i][1][+x.dataset.k][1];if(v===5)x.classList.add("ok");else if(x===b)x.classList.add("no")});
+fb(o[1]===5,`(+${o[1]} poin) ${o[2]}`,i<q.length-1?"Lanjut Dialog":"Selesai",function(){i++;r()})}})}
+r()}
+function fin(){var sk=tot(),r=sk>=90?["Penjual Level 4: Profesional","🌟"]:sk>=70?["Penjual Level 3: Konsultan","🎖️"]:sk>=50?["Penjual Level 2: Common","🙂"]:["Penjual Level 1: Hit & Run","📚"];
+var h=`<div class="card c"><div style="font-size:52px">${r[1]}</div><p class="mu">Skor akhir untuk</p><h2>${esc(name)}</h2><p class="big">${sk}</p><p class="mu">dari 100 poin</p><h2>${r[0]}</h2></div><div class="card"><b>Rincian per tahap</b>`;
+S.forEach(function(s,i){h+=`<div class="row"><span>${s.i} ${s.t}</span><b>${sc[i]}/20</b></div>`});
+A.innerHTML=h+`</div><p class="c"><button class="btn" id="ag">Main Lagi</button></p>`;
+$("ag").onclick=function(){si=0;sc=[0,0,0,0,0];intro()}}
+start();
+</script></body></html>
